@@ -1,6 +1,7 @@
 const bookSchema = require("../models/bookSchema.js");
 const BookCopieSchema = require("../models/bookCopieSchema.js");
 const path = require("path");
+const fs = require("fs");
 
 async function getListBooks(req, res) {
     try {
@@ -26,7 +27,7 @@ async function getBookById(req, res) {
 
 function storeImage(req) {
     if (!req.file) return null;
-    const fileUrl = `http://localhost:3000/public/imgs/${req.file.filename}`;
+    const fileUrl = req.file.filename;
     return fileUrl;
 }
 
@@ -80,7 +81,7 @@ async function updateBook(req, res) {
             price: Number(price),
             available: available ?? true,
             coverImage: storeImage(req),
-  
+
         };
 
         await bookSchema.findByIdAndUpdate(id, updatedBook);
@@ -121,6 +122,35 @@ async function deleteBook(req, res) {
     // Implementation for deleting a book
     try {
         const { id } = req.params;
+
+        // البحث عن الكتاب
+        const book = await bookSchema.findById(id);
+
+        if (!book) {
+            return res.status(404).json({
+                message: "الكتاب غير موجود",
+            });
+        }
+
+       
+        // حذف الصورة من المجلد
+        if (book.coverImage != null) {
+
+            // استخراج اسم الملف من الرابط
+            const imageName = book.coverImage.split("/").pop();
+
+          
+            // المسار الحقيقي للصورة
+            const imagePath = path.join(process.cwd(), "public", "imgs", imageName);
+
+
+
+            // التأكد أن الملف موجود
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
+        }
+
         await bookSchema.findByIdAndDelete(id);
         await BookCopieSchema.deleteMany({ bookId: id });
         res.status(200).json('تم الحذف بنجاح');

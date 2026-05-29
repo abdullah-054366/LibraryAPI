@@ -24,11 +24,15 @@ const returnBookSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    // condition: {
-    //     type: String,
-    //     enum: ['Good', 'Damaged', 'Lost'],
-    //     required: true
-    // },
+    condition: {
+        type: String,
+        enum: ['Good', 'Damaged', 'Lost'],
+        required: true
+    },
+    status: {
+         type: String,
+         default: null
+    },
     fineAmount: {
         type: Number,
         default: 0

@@ -6,7 +6,8 @@ const {
     createReturnBook,
     getReturnBookById,
     updateReturnBook,
-    deleteReturnBook
+    deleteReturnBook,
+    updatePayFineStatus
 } = require("../controllers/ReturnBookController");
 
 
@@ -17,6 +18,7 @@ router.get("/:id", getReturnBookById)
 router.post("/", createReturnBook)
 
 router.put("/:id", updateReturnBook)
+router.put("/status/:id", updatePayFineStatus)
 
 router.delete("/:id", deleteReturnBook)
 

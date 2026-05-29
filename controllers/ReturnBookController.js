@@ -14,7 +14,7 @@ async function createReturnBook(req, res) {
     try {
 
 
-        const { name, title, copieId, dayeOverdue, dueDate, fineAmount, isOverdue, returnDate } = req.body;
+        const { name, title, copieId, dayeOverdue, dueDate, fineAmount, isOverdue, returnDate, condition, status } = req.body;
 
         const newreturnBook =
         {
@@ -27,6 +27,8 @@ async function createReturnBook(req, res) {
             fineAmount,
             isOverdue,
             returnDate,
+            condition,
+            status
 
         }
 
@@ -73,10 +75,36 @@ async function deleteReturnBook(req, res) {
     }
 };
 
+async function updatePayFineStatus(req, res) {
+    try {
+
+
+        const { status, isOverdue, fineAmount } = req.body;
+
+        const returnBook = await ReturnBook.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: { status, isOverdue, fineAmount },
+
+            },
+            { new: true, runValidators: true }
+        );
+
+        if (!returnBook) {
+            return res.status(404).json({ message: 'Return book not found' });
+        }
+        res.json(returnBook);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+
+}
+
 module.exports = {
     createReturnBook,
     getAllReturnBooks,
     getReturnBookById,
     updateReturnBook,
-    deleteReturnBook
+    deleteReturnBook,
+    updatePayFineStatus
 };

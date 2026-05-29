@@ -22,6 +22,9 @@ const returnBookRouter = require('./routes/returnBook');
 
 
 
+
+
+
 app.use('/api/books',bookRouter);
 app.use('/api/users',userRouter);
 app.use('/api/borrowings',borrowingRouter);
@@ -32,6 +35,19 @@ app.use('/api/return-books',returnBookRouter);
 
 
 
+//Settings
+const reservationsSettingsRouter = require('./routes/routes_settings/reservationSettings');
+const finesSettingsRouter = require('./routes/routes_settings/finesSettings');
+const generalSettingsRouter = require('./routes/routes_settings/generalsettings.js');
 
-const PORT = process.env.PORT || 5000;
+
+app.use('/api/reservation-settings',reservationsSettingsRouter);
+app.use('/api/finesSettings',finesSettingsRouter);
+app.use('/api/general-settings',generalSettingsRouter);
+
+
+
+
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
