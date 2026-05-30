@@ -15,9 +15,26 @@ services:
    build: ./nginx
    ports:
      - "80:80"
+     - "443:443"
+   volumes:
+     - certbot-etc:/etc/letsencrypt
+     - certbot-var:/var/lib/letsencrypt
    depends_on:
      - backend
+
+  certbot:
+   image: certbot/certbot
+   volumes:
+     - certbot-etc:/etc/letsencrypt
+     - certbot-var:/var/lib/letsencrypt
+   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+   depends_on:
+     - nginx
+   command: certonly --webroot --webroot-path=/var/lib/letsencrypt -d asd054366@gmail.com --email --non-interactive --agree-tos --keep-until-expiring
      
 volumes:
    mongo-data:
+    weproot:
+    certbot-etc:
+    certbot-var:
  
