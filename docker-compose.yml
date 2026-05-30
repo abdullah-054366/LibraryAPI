@@ -5,6 +5,8 @@ services:
       - backend/.env
     ports:
       - "5000:5000"
+    depends_on:
+      - mongo
 
   mongo:
     image: mongo
@@ -23,6 +25,7 @@ services:
       - webroot:/var/www/certbot
     depends_on:
       - backend
+      - certbot
 
   certbot:
     image: certbot/certbot
@@ -33,11 +36,13 @@ services:
     command: certonly --webroot --webroot-path=/var/www/certbot \
       -d abdullahdev.cloud \
       -d www.abdullahdev.cloud \
-      --email asd054366@gmil.com \
-      --non-interactive --agree-tos --keep-until-expiring
+      --email asd054366@gmail.com \
+      --non-interactive \
+      --agree-tos \
+      --keep-until-expiring
     depends_on:
       - nginx
-
+      
 volumes:
   mongo-data:
   certbot-etc:
