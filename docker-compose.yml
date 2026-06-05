@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
 
   backend:
-    build: .
+    build: ./backend
     container_name: backend
     expose:
       - "5000"
